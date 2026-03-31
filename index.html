@@ -7,25 +7,24 @@
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
     <style>
         :root {
-            /* Dark Mode (Asosiy va rasmda ko'rsatilgan) */
-            --bg: #171717;
-            --navbar-bg: rgba(23, 23, 23, 0.8);
-            --text: #d1cdcd;
+            /* Dark Mode - Rasmdagi kabi */
+            --bg: #111111;
+            --navbar-bg: rgba(17, 17, 17, 0.9);
+            --text: #ffffff;
             --accent: #ff00cc; /* Neon Pushti */
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --btn-gradient: linear-gradient(90deg, #ff00cc, #3333ff);
         }
 
-        /* --- YANGILANGAN VA CHIROYLI LIGHT MODE --- */
         .light {
-            --bg: #ffffff; /* Toza oq fon */
-            --navbar-bg: rgba(255, 255, 255, 0.9); /* Toza oq navbar */
-            --text: #212529; /* To'q kulrang matn (o'qishga qulay) */
-            --accent: #d600a9; /* Yorug' fonda ko'rinishi uchun bir oz to'qroq pushti */
-            --glass: rgba(0, 0, 0, 0.03); /* Juda och so'ya */
-            --border: rgba(0, 0, 0, 0.08); /* Och chegaralar */
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Yumshoqroq soya */
+            --bg: #ffffff;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --text: #1a1a1a;
+            --accent: #d600a9;
+            --glass: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.1);
+            --btn-gradient: linear-gradient(90deg, #d600a9, #5555ff);
         }
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
@@ -35,12 +34,11 @@
             position: fixed; top: 0; width: 100%; min-height: 70px; 
             display: flex; align-items: center; justify-content: space-between; 
             padding: 10px 5%; background: var(--navbar-bg); backdrop-filter: blur(15px); 
-            border-bottom: 1px solid var(--border); z-index: 2000; box-sizing: border-box; flex-wrap: wrap;
+            border-bottom: 1px solid var(--border); z-index: 2000; box-sizing: border-box;
         }
-        .logo { font-weight: 900; font-size: 1.5rem; color: #ff00cc; letter-spacing: 2px; text-decoration: none; transition: 0.3s; }
-        .light .logo { color: #d600a9; } /* Light modeda logo rangi */
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; text-decoration: none; text-transform: uppercase; }
         
-        .nav-tools { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .nav-tools { display: flex; align-items: center; gap: 15px; }
         
         .search-input { 
             background: var(--glass); border: 1px solid var(--border); 
@@ -54,98 +52,76 @@
             background: var(--glass); padding: 8px 16px; border-radius: 20px; 
             border: 1px solid var(--border); transition: 0.3s;
         }
-        .nav-link:hover { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 0, 204, 0.3); }
+        .nav-link:hover { border-color: var(--accent); background: var(--accent); color: white; }
 
-        /* Light modeda Aloqa tugmasini ko'k qilish */
-        .light .nav-link {
-            color: #0056b3;
-            border-color: rgba(0, 86, 179, 0.2);
-            background: rgba(0, 86, 179, 0.05);
-        }
-        .light .nav-link:hover {
-            background: rgba(0, 86, 179, 0.1);
-            border-color: #0056b3;
-            box-shadow: none;
-        }
-
-        /* HEADER SECTION */
-        header { text-align: center; padding: 150px 20px 40px; display: flex; flex-direction: column; align-items: center; }
-        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 25px #ff00cc; }
-        /* Light mode uchun sarlavha: To'q va soyasiz (professional ko'rinish) */
-        .light header h1 { text-shadow: none; color: #1a1a1a; }
-        header p { font-size: 1.1rem; opacity: 0.8; margin-top: 10px; max-width: 600px; }
+        header { text-align: center; padding: 150px 20px 60px; }
+        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 25px var(--accent); color: white; }
+        header p { font-size: 1.1rem; opacity: 0.7; margin-top: 10px; }
 
         /* MENU GRID */
         .menu { 
-            display: grid; grid-template-columns: repeat(4, 1fr); 
-            gap: 25px; padding: 40px 5%; max-width: 1400px; margin: 0 auto; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; padding: 20px 5%; max-width: 1400px; margin: 0 auto; 
         }
 
         .item { 
-            background: var(--glass); border: 1px solid var(--border); 
+            background: #1a1a1a; border: 1px solid var(--border); 
             border-radius: 25px; padding: 20px; text-align: center; 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; justify-content: space-between;
-            position: relative;
+            transition: 0.4s; display: flex; flex-direction: column; position: relative;
         }
-        .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(255, 0, 204, 0.15); }
-        .item img { width: 100%; height: 180px; border-radius: 20px; object-fit: cover; background: #111; }
-        .item h3 { margin: 15px 0 5px; font-size: 1.3rem; white-space: normal; color: #fff; }
-        .light .item h3 { color: #212529; } /* Light modeda taom nomi */
+        .light .item { background: #f9f9f9; }
+        .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 204, 0.2); }
+        
+        .item img { width: 100%; height: 200px; border-radius: 20px; object-fit: cover; }
+        .item h3 { margin: 15px 0 5px; font-size: 1.4rem; text-transform: lowercase; color: white; }
+        .light .item h3 { color: #1a1a1a; }
 
-        .price { color: #ff00cc; font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
-        .light .price { color: #d600a9; } /* Light modeda narx rangi */
-
-        .button { background: linear-gradient(45deg, var(--accent), #3333ff); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .button:hover { opacity: 0.9; transform: scale(1.03); }
-
-        /* Mode Toggle Button */
-        .mode-btn { background:none; border:none; cursor:pointer; font-size:20px; color: var(--text); padding: 5px; border-radius: 50%; transition: 0.3s; }
-        .mode-btn:hover { background: var(--glass); }
+        .price { color: var(--accent); font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
+        
+        .button { 
+            background: var(--btn-gradient); color: white; border: none; padding: 12px; border-radius: 12px; 
+            font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px;
+        }
+        .button:hover { filter: brightness(1.2); transform: scale(1.02); }
 
         /* SAVATCHA PANEL */
         .cart-panel { 
-            position: fixed; top: 0; right: -100%; width: 100%; max-width: 380px; height: 100%; 
+            position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; 
             background: var(--bg); border-left: 2px solid var(--accent); 
-            z-index: 3000; padding: 30px; transition: 0.5s; 
-            box-shadow: -10px 0 30px rgba(0,0,0,0.3); overflow-y: auto; box-sizing: border-box;
+            z-index: 3000; padding: 30px; transition: 0.5s; box-shadow: -10px 0 50px #000; overflow-y: auto; box-sizing: border-box;
         }
         .cart-panel.active { right: 0; }
-        .light .cart-panel { border-left-color: #d600a9; }
-        
-        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
 
-        /* ADMIN BOX */
-        #admin-box { position: fixed; top: 100px; right: 20px; width: 260px; background: var(--bg); border: 2px solid #ff00cc; border-radius: 25px; padding: 20px; z-index: 5000; display: none; box-shadow: 0 0 30px rgba(255, 0, 204, 0.2); }
-        .light #admin-box { border-color: #d600a9; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .light #admin-box h3 { color: #d600a9 !important; }
+        /* ADMIN PANEL */
+        #admin-box { 
+            position: fixed; top: 100px; right: 20px; width: 280px; 
+            background: #1a1a1a; border: 2px solid var(--accent); 
+            border-radius: 25px; padding: 25px; z-index: 5000; display: none; box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+        }
+        .light #admin-box { background: white; }
 
-        /* FOOTER */
-        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
-        .f-text { opacity: 0.5; cursor: pointer; user-select: none; font-size: 14px; }
-        .light .f-text { opacity: 0.7; }
+        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 100px; }
+        .f-text { opacity: 0.4; cursor: pointer; font-size: 12px; line-height: 1.8; }
 
-        /* MEDIA QUERIES */
-        @media (max-width: 1100px) { .menu { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 850px) { .menu { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 550px) { 
-            .menu { grid-template-columns: repeat(1, 1fr); }
-            .navbar { justify-content: center; padding: 15px; }
-            .nav-tools { justify-content: center; width: 100%; margin-top: 10px; }
-            header { padding: 180px 20px 40px; }
+        @media (max-width: 600px) {
+            .navbar { padding: 10px 3%; }
+            .logo { font-size: 1.2rem; }
+            .search-input { display: none; }
+            header h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
-<body>
+<body class="dark">
 
 <nav class="navbar">
     <a href="index.html" class="logo">SHOKH BURGER</a>
     <div class="nav-tools">
         <input type="text" id="searchInput" class="search-input" placeholder="Qidirish..." oninput="filterItems()">
         <a href="aloqa.html" class="nav-link">📞 Aloqa</a>
-        <button onclick="toggleMode()" class="mode-btn">🌓</button>
-        <div onclick="toggleCart()" style="cursor:pointer; font-size:22px; position:relative; color: var(--text);">
-            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:#ff00cc; color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:bold;">0</span>
+        <button onclick="toggleMode()" style="background:none; border:none; cursor:pointer; font-size:20px;">🌓</button>
+        <div onclick="toggleCart()" style="cursor:pointer; font-size:22px; position:relative;">
+            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:var(--accent); color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:bold;">0</span>
         </div>
     </div>
 </nav>
@@ -158,26 +134,29 @@
 <div id="menuList" class="menu"></div>
 
 <div id="cartPanel" class="cart-panel">
-    <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:35px; color:#ff00cc;">&times;</span>
-    <h2 style="color: var(--text);">Sizning savatingiz</h2>
-    <div id="cart-list" style="margin-top:30px; color: var(--text);"></div>
-    <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
-    <h3 style="display:flex; justify-content:space-between; color: var(--text);">Jami: <span id="total-price">0</span> so'm</h3>
-    <button class="button" style="width:100%" onclick="checkout()">Sotib olish</button>
+    <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:35px; color:var(--accent);">&times;</span>
+    <h2>Savat</h2>
+    <div id="cart-list" style="margin-top:30px;"></div>
+    <h3 style="display:flex; justify-content:space-between; margin-top:30px;">Jami: <span id="total-price">0</span> so'm</h3>
+    <button class="button" style="width:100%; margin-top:20px;" onclick="checkout()">Sotib olish</button>
 </div>
 
 <div id="admin-box">
-    <h3 style="text-align:center; color:#ff00cc; margin-top: 0;">Admin Panel</h3>
-    <input type="text" id="p-name" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Taom nomi">
-    <input type="number" id="p-price" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Narxi">
-    <input type="text" id="p-img" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Rasm URL">
+    <h3 style="text-align:center; color:var(--accent); margin-bottom:20px;">Admin Panel</h3>
+    <input type="text" id="p-name" style="width:100%; padding:12px; margin-bottom:10px; background:rgba(0,0,0,0.3); color:#fff; border:1px solid var(--border); border-radius:10px; box-sizing:border-box;" placeholder="Taom nomi">
+    <input type="number" id="p-price" style="width:100%; padding:12px; margin-bottom:10px; background:rgba(0,0,0,0.3); color:#fff; border:1px solid var(--border); border-radius:10px; box-sizing:border-box;" placeholder="Narxi">
+    <input type="text" id="p-img" style="width:100%; padding:12px; margin-bottom:10px; background:rgba(0,0,0,0.3); color:#fff; border:1px solid var(--border); border-radius:10px; box-sizing:border-box;" placeholder="Rasm URL">
     <button class="button" style="width:100%" onclick="addProduct()">Qo'shish</button>
-    <button onclick="closeAdmin()" style="background:none; border:none; color:red; width:100%; margin-top:10px; cursor:pointer; font-weight: bold;">Yopish</button>
+    <button onclick="closeAdmin()" style="background:none; border:none; color:red; width:100%; margin-top:15px; cursor:pointer; font-weight:bold;">Yopish</button>
 </div>
 
-<footer><p class="f-text" onclick="handleAdmin()">© 2026 SHOKH BURGER Premium. Barcha huquqlar himoyalangan. <br>
-bu sayt va saytga ulangan bot sotiladi <br>
-tel: +998-77-577-2042</p></footer>
+<footer>
+    <p class="f-text" onclick="handleAdmin()">
+        © 2026 SHOKH BURGER Premium. Barcha huquqlar himoyalangan. <br>
+        bu sayt va saytga ulangan bot sotiladi <br>
+        tel: +998-77-577-2042
+    </p>
+</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -198,12 +177,12 @@ tel: +998-77-577-2042</p></footer>
     const productsRef = ref(db, 'products');
 
     window.products = [];
-    window.cart = JSON.parse(localStorage.getItem('cukur_cart')) || [];
+    window.cart = JSON.parse(localStorage.getItem('burger_cart')) || [];
     window.isAdmin = false;
     let clicks = 0;
 
-    const TELEGRAM_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; 
-    const TELEGRAM_CHAT_ID = "7312694067"; 
+    const BOT_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; 
+    const CHAT_ID = "7312694067"; 
 
     onValue(productsRef, (snapshot) => {
         const data = snapshot.val();
@@ -220,8 +199,8 @@ tel: +998-77-577-2042</p></footer>
         const menu = document.getElementById('menuList');
         menu.innerHTML = data.map(p => `
             <div class="item">
-                ${window.isAdmin ? `<button style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100; font-weight:bold; font-size:16px; line-height:1;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-                <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'">
+                ${window.isAdmin ? `<button style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
+                <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500'">
                 <h3>${p.name}</h3>
                 <div class="price">${p.price.toLocaleString()} so'm</div>
                 <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
@@ -231,73 +210,51 @@ tel: +998-77-577-2042</p></footer>
 
     window.addToCart = function(id) {
         const p = window.products.find(x => x.id === id);
-        if (!p) return;
-        const inCart = window.cart.find(x => x.id === id);
-        if(inCart) inCart.qty++; else window.cart.push({...p, qty: 1});
+        const item = window.cart.find(x => x.id === id);
+        if(item) item.qty++; else window.cart.push({...p, qty: 1});
         window.updateCart();
     };
 
-    window.increaseQty = function(id) {
-        const item = window.cart.find(x => x.id === id);
-        if(item) {
-            item.qty++;
-            window.updateCart();
-        }
-    };
-
-    window.decreaseQty = function(id) {
-        const index = window.cart.findIndex(x => x.id === id);
-        if(index !== -1) {
-            if(window.cart[index].qty > 1) {
-                window.cart[index].qty--;
-            } else {
-                window.cart.splice(index, 1);
-            }
-            window.updateCart();
-        }
-    };
-
     window.updateCart = function() {
-        localStorage.setItem('cukur_cart', JSON.stringify(window.cart));
+        localStorage.setItem('burger_cart', JSON.stringify(window.cart));
         document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
-        let totalSum = 0;
+        let total = 0;
         document.getElementById('cart-list').innerHTML = window.cart.map(i => {
-            totalSum += i.price * i.qty;
+            total += i.price * i.qty;
             return `<div class="cart-item">
-                <div><b>${i.name}</b><br><small style="opacity:0.7;">${i.price.toLocaleString()} so'm</small></div>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="decreaseQty(${i.id})" style="background:var(--glass); border:1px solid var(--border); color:var(--text); padding:4px 10px; border-radius:8px; cursor:pointer; font-weight:bold;">-</button>
-                    <span style="font-weight:bold; min-width:20px; text-align:center;">${i.qty}</span>
-                    <button onclick="increaseQty(${i.id})" style="background:#ff00cc; color:white; border:none; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:bold;">+</button>
-                </div>
+                <div><b>${i.name}</b><br>${i.qty} x ${i.price.toLocaleString()}</div>
+                <button onclick="removeItem(${i.id})" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold;">O'chirish</button>
             </div>`;
         }).join('');
-        document.getElementById('total-price').innerText = totalSum.toLocaleString();
+        document.getElementById('total-price').innerText = total.toLocaleString();
+    };
+
+    window.removeItem = (id) => {
+        window.cart = window.cart.filter(x => x.id !== id);
+        window.updateCart();
     };
 
     window.checkout = function() {
         if (window.cart.length === 0) return alert("Savat bo'sh!");
-        const phone = prompt("Telefon raqamingiz:");
-        const address = prompt("Manzil:");
-        if (!phone || !address) return alert("Ma'lumot to'liq emas!");
+        const tel = prompt("Telefon raqamingiz:");
+        const manzil = prompt("Manzilni kiriting:");
+        if (!tel || !manzil) return alert("Ma'lumotlar to'liq emas!");
 
-        let message = `🚀 YANGI BUYURTMA\n📞 Tel: ${phone}\n📍 Manzil: ${address}\n\n`;
-        let total = 0;
+        let text = `🍔 YANGI BUYURTMA:\n📞 Tel: ${tel}\n📍 Manzil: ${manzil}\n\n`;
+        let jami = 0;
         window.cart.forEach(i => {
-            message += `- ${i.name} (${i.qty} ta)\n`;
-            total += i.price * i.qty;
+            text += `• ${i.name} (${i.qty} dona)\n`;
+            jami += i.price * i.qty;
         });
-        message += `\n💰 JAMI: ${total.toLocaleString()} so'm`;
+        text += `\n💰 JAMI: ${jami.toLocaleString()} so'm`;
 
-        fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+            body: JSON.stringify({ chat_id: CHAT_ID, text: text })
         }).then(() => {
-            alert("Buyurtma yuborildi!");
+            alert("Buyurtma qabul qilindi!");
             window.cart = []; window.updateCart(); window.toggleCart();
-        }).catch(() => {
-            alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
         });
     };
 
@@ -306,25 +263,13 @@ tel: +998-77-577-2042</p></footer>
         window.renderMenu(window.products.filter(p => p.name.toLowerCase().includes(q)));
     };
 
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light');
-    }
-
-    window.toggleMode = () => {
-        document.body.classList.toggle('light');
-        if (document.body.classList.contains('light')) {
-            localStorage.setItem('theme', 'light');
-        } else {
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-
+    window.toggleMode = () => document.body.classList.toggle('light');
     window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
-    
+
     window.handleAdmin = () => {
         clicks++;
         if(clicks === 3) {
-            if(prompt("Parol:") === "7777") {
+            if(prompt("Admin paroli:") === "7777") {
                 window.isAdmin = true;
                 document.getElementById('admin-box').style.display = 'block';
                 window.renderMenu();
@@ -336,20 +281,17 @@ tel: +998-77-577-2042</p></footer>
 
     window.addProduct = () => {
         const n = document.getElementById('p-name').value, p = parseInt(document.getElementById('p-price').value), i = document.getElementById('p-img').value;
-        if(n && p && i) set(push(productsRef), { id: Date.now(), name: n, price: p, img: i }).then(() => {
-            alert("Qo'shildi!");
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-img').value = '';
-        }); else {
-            alert("Iltimos barcha maydonlarni to'ldiring.");
+        if(n && p && i) {
+            set(push(productsRef), { id: Date.now(), name: n, price: p, img: i }).then(() => {
+                alert("Qo'shildi!");
+                document.getElementById('p-name').value = '';
+                document.getElementById('p-price').value = '';
+                document.getElementById('p-img').value = '';
+            });
         }
     };
-    window.removeProduct = (fKey) => {
-        if(confirm("Ushbu mahsulotni o'chirmoqchimisiz?")) {
-            remove(ref(db, 'products/' + fKey));
-        }
-    }
+
+    window.removeProduct = (fKey) => remove(ref(db, 'products/' + fKey));
     window.closeAdmin = () => { window.isAdmin = false; document.getElementById('admin-box').style.display = 'none'; window.renderMenu(); };
 
     window.updateCart();
