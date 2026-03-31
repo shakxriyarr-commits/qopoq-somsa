@@ -7,24 +7,25 @@
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
     <style>
         :root {
-            /* Dark Mode - Rasmdagi kabi */
-            --bg: #111111;
-            --navbar-bg: rgba(17, 17, 17, 0.9);
+            /* Dark Mode - To'q Ko'k Stil */
+            --bg: #0a0a0a;
+            --navbar-bg: rgba(10, 10, 10, 0.9);
             --text: #ffffff;
-            --accent: #ff00cc; /* Neon Pushti */
+            --accent: #0047AB; /* To'q ko'k (Cobalt Blue) */
+            --accent-glow: #00008B; /* Dark Blue */
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
-            --btn-gradient: linear-gradient(90deg, #ff00cc, #3333ff);
+            --btn-gradient: linear-gradient(90deg, #00008B, #0047AB);
         }
 
         .light {
             --bg: #ffffff;
             --navbar-bg: rgba(255, 255, 255, 0.95);
             --text: #1a1a1a;
-            --accent: #d600a9;
+            --accent: #00008B;
             --glass: rgba(0, 0, 0, 0.03);
             --border: rgba(0, 0, 0, 0.1);
-            --btn-gradient: linear-gradient(90deg, #d600a9, #5555ff);
+            --btn-gradient: linear-gradient(90deg, #00008B, #0056b3);
         }
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
@@ -55,7 +56,7 @@
         .nav-link:hover { border-color: var(--accent); background: var(--accent); color: white; }
 
         header { text-align: center; padding: 150px 20px 60px; }
-        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 25px var(--accent); color: white; }
+        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); color: white; }
         header p { font-size: 1.1rem; opacity: 0.7; margin-top: 10px; }
 
         /* MENU GRID */
@@ -65,15 +66,15 @@
         }
 
         .item { 
-            background: #1a1a1a; border: 1px solid var(--border); 
+            background: #111111; border: 1px solid var(--border); 
             border-radius: 25px; padding: 20px; text-align: center; 
             transition: 0.4s; display: flex; flex-direction: column; position: relative;
         }
         .light .item { background: #f9f9f9; }
-        .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(255, 0, 204, 0.2); }
+        .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(0, 0, 139, 0.3); }
         
         .item img { width: 100%; height: 200px; border-radius: 20px; object-fit: cover; }
-        .item h3 { margin: 15px 0 5px; font-size: 1.4rem; text-transform: lowercase; color: white; }
+        .item h3 { margin: 15px 0 5px; font-size: 1.4rem; color: white; }
         .light .item h3 { color: #1a1a1a; }
 
         .price { color: var(--accent); font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
@@ -82,12 +83,12 @@
             background: var(--btn-gradient); color: white; border: none; padding: 12px; border-radius: 12px; 
             font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px;
         }
-        .button:hover { filter: brightness(1.2); transform: scale(1.02); }
+        .button:hover { filter: brightness(1.3); transform: scale(1.02); }
 
         /* SAVATCHA PANEL */
         .cart-panel { 
             position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; 
-            background: var(--bg); border-left: 2px solid var(--accent); 
+            background: var(--bg); border-left: 3px solid var(--accent); 
             z-index: 3000; padding: 30px; transition: 0.5s; box-shadow: -10px 0 50px #000; overflow-y: auto; box-sizing: border-box;
         }
         .cart-panel.active { right: 0; }
@@ -96,13 +97,13 @@
         /* ADMIN PANEL */
         #admin-box { 
             position: fixed; top: 100px; right: 20px; width: 280px; 
-            background: #1a1a1a; border: 2px solid var(--accent); 
+            background: #111111; border: 2px solid var(--accent); 
             border-radius: 25px; padding: 25px; z-index: 5000; display: none; box-shadow: 0 0 40px rgba(0,0,0,0.8); 
         }
         .light #admin-box { background: white; }
 
         footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 100px; }
-        .f-text { opacity: 0.4; cursor: pointer; font-size: 12px; line-height: 1.8; }
+        .f-text { opacity: 0.4; cursor: pointer; font-size: 12px; line-height: 1.8; color: var(--text); }
 
         @media (max-width: 600px) {
             .navbar { padding: 10px 3%; }
@@ -112,7 +113,7 @@
         }
     </style>
 </head>
-<body class="dark">
+<body>
 
 <nav class="navbar">
     <a href="index.html" class="logo">SHOKH BURGER</a>
@@ -135,9 +136,9 @@
 
 <div id="cartPanel" class="cart-panel">
     <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:35px; color:var(--accent);">&times;</span>
-    <h2>Savat</h2>
-    <div id="cart-list" style="margin-top:30px;"></div>
-    <h3 style="display:flex; justify-content:space-between; margin-top:30px;">Jami: <span id="total-price">0</span> so'm</h3>
+    <h2 style="color:var(--text)">Savat</h2>
+    <div id="cart-list" style="margin-top:30px; color:var(--text)"></div>
+    <h3 style="display:flex; justify-content:space-between; margin-top:30px; color:var(--text)">Jami: <span id="total-price">0</span> so'm</h3>
     <button class="button" style="width:100%; margin-top:20px;" onclick="checkout()">Sotib olish</button>
 </div>
 
@@ -177,7 +178,7 @@
     const productsRef = ref(db, 'products');
 
     window.products = [];
-    window.cart = JSON.parse(localStorage.getItem('burger_cart')) || [];
+    window.cart = JSON.parse(localStorage.getItem('burger_cart_blue')) || [];
     window.isAdmin = false;
     let clicks = 0;
 
@@ -216,7 +217,7 @@
     };
 
     window.updateCart = function() {
-        localStorage.setItem('burger_cart', JSON.stringify(window.cart));
+        localStorage.setItem('burger_cart_blue', JSON.stringify(window.cart));
         document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
         let total = 0;
         document.getElementById('cart-list').innerHTML = window.cart.map(i => {
@@ -240,7 +241,7 @@
         const manzil = prompt("Manzilni kiriting:");
         if (!tel || !manzil) return alert("Ma'lumotlar to'liq emas!");
 
-        let text = `🍔 YANGI BUYURTMA:\n📞 Tel: ${tel}\n📍 Manzil: ${manzil}\n\n`;
+        let text = `🔵 YANGI BUYURTMA (TO'Q KO'K):\n📞 Tel: ${tel}\n📍 Manzil: ${manzil}\n\n`;
         let jami = 0;
         window.cart.forEach(i => {
             text += `• ${i.name} (${i.qty} dona)\n`;
