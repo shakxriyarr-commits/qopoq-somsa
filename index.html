@@ -11,8 +11,8 @@
             --bg: #0a0a0a;
             --navbar-bg: rgba(10, 10, 10, 0.9);
             --text: #ffffff;
-            --accent: #0047AB; /* To'q ko'k (Cobalt Blue) */
-            --accent-glow: #00008B; /* Dark Blue */
+            --accent: #0047AB; 
+            --accent-glow: #00008B;
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --btn-gradient: linear-gradient(90deg, #00008B, #0047AB);
@@ -92,7 +92,17 @@
             z-index: 3000; padding: 30px; transition: 0.5s; box-shadow: -10px 0 50px #000; overflow-y: auto; box-sizing: border-box;
         }
         .cart-panel.active { right: 0; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .cart-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; 
+        }
+        .cart-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { 
+            background: var(--accent); color: white; border: none; 
+            width: 30px; height: 30px; border-radius: 8px; cursor: pointer; 
+            font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center;
+        }
+        .qty-btn:hover { filter: brightness(1.2); }
 
         /* ADMIN PANEL */
         #admin-box { 
@@ -178,7 +188,7 @@
     const productsRef = ref(db, 'products');
 
     window.products = [];
-    window.cart = JSON.parse(localStorage.getItem('burger_cart_blue')) || [];
+    window.cart = JSON.parse(localStorage.getItem('burger_cart_blue_v2')) || [];
     window.isAdmin = false;
     let clicks = 0;
 
@@ -216,23 +226,36 @@
         window.updateCart();
     };
 
+    window.updateQty = function(id, delta) {
+        const item = window.cart.find(x => x.id === id);
+        if(item) {
+            item.qty += delta;
+            if(item.qty <= 0) {
+                window.cart = window.cart.filter(x => x.id !== id);
+            }
+            window.updateCart();
+        }
+    };
+
     window.updateCart = function() {
-        localStorage.setItem('burger_cart_blue', JSON.stringify(window.cart));
+        localStorage.setItem('burger_cart_blue_v2', JSON.stringify(window.cart));
         document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
         let total = 0;
         document.getElementById('cart-list').innerHTML = window.cart.map(i => {
             total += i.price * i.qty;
             return `<div class="cart-item">
-                <div><b>${i.name}</b><br>${i.qty} x ${i.price.toLocaleString()}</div>
-                <button onclick="removeItem(${i.id})" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold;">O'chirish</button>
+                <div>
+                    <b>${i.name}</b><br>
+                    <span style="font-size:12px; opacity:0.7;">${i.price.toLocaleString()} so'm</span>
+                </div>
+                <div class="cart-controls">
+                    <button class="qty-btn" onclick="updateQty(${i.id}, -1)">-</button>
+                    <span style="font-weight:bold; min-width:20px; text-align:center;">${i.qty}</span>
+                    <button class="qty-btn" onclick="updateQty(${i.id}, 1)">+</button>
+                </div>
             </div>`;
         }).join('');
         document.getElementById('total-price').innerText = total.toLocaleString();
-    };
-
-    window.removeItem = (id) => {
-        window.cart = window.cart.filter(x => x.id !== id);
-        window.updateCart();
     };
 
     window.checkout = function() {
