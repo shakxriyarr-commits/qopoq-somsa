@@ -6,24 +6,48 @@
     <title>SHOKH BURGER | Premium</title>
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
     <style>
+        /* --- ASOSIY O'ZGARUVCHILAR --- */
         :root {
-            --bg: #171717; --text: #d1cdcd; --accent: #ff00cc; 
-            --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1);
-            --dark-blue: #00008B; /* To'q ko'k */
-            --blue-gradient: linear-gradient(45deg, #00008B, #0047AB);
+            /* Dark Mode (Asosiy va rasmda ko'rsatilgan) */
+            --bg: #171717;
+            --navbar-bg: rgba(23, 23, 23, 0.8);
+            --text: #d1cdcd;
+            --accent: #ff00cc; /* Neon Pushti */
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            
+            /* Sarlavha effekti */
+            --header-text-shadow: 0 0 25px var(--accent);
+            --header-color: #fff;
         }
-        .light { --bg: #ccc6c6; --text: #1a1a1a; --glass: rgba(0, 0, 0, 0.05); --border: rgba(0, 0, 0, 0.1); }
 
+        /* --- YANGILANGAN VA CHIROYLI LIGHT MODE --- */
+        .light {
+            --bg: #f8f9fa; /* Juda yumshoq kulrang fon */
+            --navbar-bg: rgba(255, 255, 255, 0.9); /* Toza oq navbar */
+            --text: #212529; /* To'q kulrang matn (o'qishga qulay) */
+            --accent: #ff00cc; /* Pushti saqlanadi, lekin matnlarda ishlatilmaydi */
+            --glass: rgba(0, 0, 0, 0.03); /* Juda och so'ya */
+            --border: rgba(0, 0, 0, 0.08); /* Och chegaralar */
+            
+            /* Light Mode uchun sarlavha: To'q va soyasiz (professional ko'rinish) */
+            --header-text-shadow: none;
+            --header-color: #1a1a1a;
+        }
+
+        /* --- STILIZATSIYA --- */
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* NAVBAR */
         .navbar { 
             position: fixed; top: 0; width: 100%; min-height: 70px; 
             display: flex; align-items: center; justify-content: space-between; 
-            padding: 10px 5%; background: rgba(23, 23, 23, 0.8); backdrop-filter: blur(15px); 
+            padding: 10px 5%; background: var(--navbar-bg); backdrop-filter: blur(15px); 
             border-bottom: 1px solid var(--border); z-index: 2000; box-sizing: border-box; flex-wrap: wrap;
         }
-        .logo { font-weight: 900; font-size: 1.5rem; color: var(--accent); letter-spacing: 2px; text-decoration: none; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: #ff00cc; letter-spacing: 2px; text-decoration: none; }
+        /* Light modeda logotip rangini bir oz to'qroq pushti qilish mumkin */
+        .light .logo { color: #d600a9; }
         
         .nav-tools { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         
@@ -32,19 +56,31 @@
             color: var(--text); padding: 8px 18px; border-radius: 25px; outline: none; 
             width: 140px; transition: 0.4s; font-size: 14px;
         }
-        .search-input:focus { width: 200px; border-color: var(--dark-blue); }
+        .search-input:focus { width: 200px; border-color: var(--accent); }
 
         .nav-link { 
             text-decoration: none; color: var(--text); font-size: 13px; font-weight: bold; 
             background: var(--glass); padding: 8px 16px; border-radius: 20px; 
             border: 1px solid var(--border); transition: 0.3s;
         }
-        /* Hover to'q ko'k */
-        .nav-link:hover { border-color: var(--dark-blue); background: var(--dark-blue); color: white; box-shadow: none; }
+        .nav-link:hover { border-color: var(--accent); box-shadow: 0 0 10px rgba(255, 0, 204, 0.3); }
 
-        header { text-align: center; padding: 150px 20px 40px; }
-        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-shadow: 0 0 25px var(--accent); text-transform: uppercase; }
-        header p { font-size: 1.1rem; opacity: 0.8; margin-top: 10px; }
+        /* Light modeda Aloqa tugmasini ko'k qilish */
+        .light .nav-link {
+            color: #0056b3;
+            border-color: rgba(0, 86, 179, 0.2);
+            background: rgba(0, 86, 179, 0.05);
+        }
+        .light .nav-link:hover {
+            background: rgba(0, 86, 179, 0.1);
+            border-color: #0056b3;
+            box-shadow: none;
+        }
+
+        /* HEADER SECTION */
+        header { text-align: center; padding: 150px 20px 40px; display: flex; flex-direction: column; align-items: center; }
+        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; color: var(--header-color); text-shadow: var(--header-text-shadow); }
+        header p { font-size: 1.1rem; opacity: 0.8; margin-top: 10px; max-width: 600px; }
 
         /* MENU GRID */
         .menu { 
@@ -59,28 +95,47 @@
             display: flex; flex-direction: column; justify-content: space-between;
             position: relative;
         }
-        .item:hover { transform: translateY(-10px); border-color: var(--dark-blue); box-shadow: 0 10px 30px rgba(0, 0, 139, 0.2); }
+        .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(255, 0, 204, 0.15); }
         .item img { width: 100%; height: 180px; border-radius: 20px; object-fit: cover; background: #111; }
-        .item h3 { margin: 15px 0 5px; font-size: 1.3rem; white-space: normal; color: #fff; }
+        .item h3 { margin: 15px 0 5px; font-size: 1.3rem; white-space: normal; color: var(--text); }
+        
+        /* Dark modeda maxsus oq rang taom nomi uchun */
+        body:not(.light) .item h3 { color: #fff; }
 
         .price { color: var(--accent); font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
         
-        /* Tugmalar to'q ko'k */
-        .button { 
-            background: var(--blue-gradient); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; 
-        }
-        .button:hover { background: #0000CD; transform: scale(1.02); }
+        /* Light modeda narx rangini to'qroq pushti qilish */
+        .light .price { color: #d600a9; }
+
+        .button { background: linear-gradient(45deg, var(--accent), #3333ff); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .button:hover { opacity: 0.9; transform: scale(1.03); }
+
+        /* Mode Toggle Button */
+        .mode-btn { background:none; border:none; cursor:pointer; font-size:20px; color: var(--text); padding: 5px; border-radius: 50%; transition: 0.3s; }
+        .mode-btn:hover { background: var(--glass); }
 
         /* SAVATCHA PANEL */
         .cart-panel { 
             position: fixed; top: 0; right: -100%; width: 100%; max-width: 380px; height: 100%; 
-            background: var(--bg); border-left: 2px solid var(--dark-blue); 
+            background: var(--bg); border-left: 2px solid var(--accent); 
             z-index: 3000; padding: 30px; transition: 0.5s; 
-            box-shadow: -10px 0 30px #000; overflow-y: auto; box-sizing: border-box;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.3); overflow-y: auto; box-sizing: border-box;
         }
         .cart-panel.active { right: 0; }
         
         .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+        /* ADMIN BOX */
+        #admin-box { position: fixed; top: 100px; right: 20px; width: 260px; background: var(--bg); border: 2px solid var(--accent); border-radius: 25px; padding: 20px; z-index: 5000; display: none; box-shadow: 0 0 30px rgba(255, 0, 204, 0.2); }
+        
+        /* Light modeda admin box soyasini o'chirish */
+        .light #admin-box { box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-color: #d600a9; }
+        .light #admin-box h3 { color: #d600a9 !important; }
+
+        /* FOOTER */
+        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
+        .f-text { opacity: 0.5; cursor: pointer; user-select: none; font-size: 14px; }
+        .light .f-text { opacity: 0.7; }
 
         /* MEDIA QUERIES */
         @media (max-width: 1100px) { .menu { grid-template-columns: repeat(3, 1fr); } }
@@ -91,10 +146,6 @@
             .nav-tools { justify-content: center; width: 100%; margin-top: 10px; }
             header { padding: 180px 20px 40px; }
         }
-
-        #admin-box { position: fixed; top: 100px; right: 20px; width: 260px; background: var(--bg); border: 2px solid var(--dark-blue); border-radius: 25px; padding: 20px; z-index: 5000; display: none; box-shadow: 0 0 30px rgba(0,0,139,0.3); }
-        footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
-        .f-text { opacity: 0.4; cursor: pointer; user-select: none; }
     </style>
 </head>
 <body>
@@ -104,9 +155,9 @@
     <div class="nav-tools">
         <input type="text" id="searchInput" class="search-input" placeholder="Qidirish..." oninput="filterItems()">
         <a href="aloqa.html" class="nav-link">📞 Aloqa</a>
-        <button onclick="toggleMode()" style="background:none; border:none; cursor:pointer; font-size:20px;">🌓</button>
-        <div onclick="toggleCart()" style="cursor:pointer; font-size:22px; position:relative;">
-            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:var(--dark-blue); color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:bold;">0</span>
+        <button onclick="toggleMode()" class="mode-btn">🌓</button>
+        <div onclick="toggleCart()" style="cursor:pointer; font-size:22px; position:relative; color: var(--text);">
+            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:#ff00cc; color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:bold;">0</span>
         </div>
     </div>
 </nav>
@@ -119,21 +170,21 @@
 <div id="menuList" class="menu"></div>
 
 <div id="cartPanel" class="cart-panel">
-    <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:35px; color:var(--dark-blue);">&times;</span>
-    <h2>Sizning savatingiz</h2>
-    <div id="cart-list" style="margin-top:30px;"></div>
-    <hr style="border:0.5px solid var(--border); margin:20px 0;">
-    <h3 style="display:flex; justify-content:space-between;">Jami: <span id="total-price">0</span> so'm</h3>
+    <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:35px; color:#ff00cc;">&times;</span>
+    <h2 style="color: var(--text);">Sizning savatingiz</h2>
+    <div id="cart-list" style="margin-top:30px; color: var(--text);"></div>
+    <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+    <h3 style="display:flex; justify-content:space-between; color: var(--text);">Jami: <span id="total-price">0</span> so'm</h3>
     <button class="button" style="width:100%" onclick="checkout()">Sotib olish</button>
 </div>
 
 <div id="admin-box">
-    <h3 style="text-align:center; color:var(--dark-blue)">Admin Panel</h3>
-    <input type="text" id="p-name" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #333; border-radius:10px;" placeholder="Taom nomi">
-    <input type="number" id="p-price" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #333; border-radius:10px;" placeholder="Narxi">
-    <input type="text" id="p-img" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:#fff; border:1px solid #333; border-radius:10px;" placeholder="Rasm URL">
+    <h3 style="text-align:center; color:#ff00cc; margin-top: 0;">Admin Panel</h3>
+    <input type="text" id="p-name" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Taom nomi">
+    <input type="number" id="p-price" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Narxi">
+    <input type="text" id="p-img" style="width:100%; padding:10px; margin-bottom:10px; background:var(--glass); color:var(--text); border:1px solid var(--border); border-radius:10px; box-sizing: border-box;" placeholder="Rasm URL">
     <button class="button" style="width:100%" onclick="addProduct()">Qo'shish</button>
-    <button onclick="closeAdmin()" style="background:none; border:none; color:red; width:100%; margin-top:10px; cursor:pointer;">Yopish</button>
+    <button onclick="closeAdmin()" style="background:none; border:none; color:red; width:100%; margin-top:10px; cursor:pointer; font-weight: bold;">Yopish</button>
 </div>
 
 <footer><p class="f-text" onclick="handleAdmin()">© 2026 SHOKH BURGER Premium. Barcha huquqlar himoyalangan. <br>
@@ -181,7 +232,7 @@ tel: +998-77-577-2042</p></footer>
         const menu = document.getElementById('menuList');
         menu.innerHTML = data.map(p => `
             <div class="item">
-                ${window.isAdmin ? `<button style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100;" onclick="removeProduct('${p.fKey}')">×</button>` : ''}
+                ${window.isAdmin ? `<button style="position:absolute; top:10px; right:10px; background:red; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100; font-weight:bold; font-size:16px; line-height:1;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
                 <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'">
                 <h3>${p.name}</h3>
                 <div class="price">${p.price.toLocaleString()} so'm</div>
@@ -192,6 +243,7 @@ tel: +998-77-577-2042</p></footer>
 
     window.addToCart = function(id) {
         const p = window.products.find(x => x.id === id);
+        if (!p) return;
         const inCart = window.cart.find(x => x.id === id);
         if(inCart) inCart.qty++; else window.cart.push({...p, qty: 1});
         window.updateCart();
@@ -199,14 +251,20 @@ tel: +998-77-577-2042</p></footer>
 
     window.increaseQty = function(id) {
         const item = window.cart.find(x => x.id === id);
-        if(item) { item.qty++; window.updateCart(); }
+        if(item) {
+            item.qty++;
+            window.updateCart();
+        }
     };
 
     window.decreaseQty = function(id) {
         const index = window.cart.findIndex(x => x.id === id);
         if(index !== -1) {
-            if(window.cart[index].qty > 1) window.cart[index].qty--;
-            else window.cart.splice(index, 1);
+            if(window.cart[index].qty > 1) {
+                window.cart[index].qty--;
+            } else {
+                window.cart.splice(index, 1);
+            }
             window.updateCart();
         }
     };
@@ -218,11 +276,11 @@ tel: +998-77-577-2042</p></footer>
         document.getElementById('cart-list').innerHTML = window.cart.map(i => {
             totalSum += i.price * i.qty;
             return `<div class="cart-item">
-                <div><b>${i.name}</b><br><small>${i.price.toLocaleString()} so'm</small></div>
+                <div><b>${i.name}</b><br><small style="opacity:0.7;">${i.price.toLocaleString()} so'm</small></div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <button onclick="decreaseQty(${i.id})" style="background:var(--glass); border:1px solid var(--border); color:var(--text); padding:4px 10px; border-radius:8px; cursor:pointer; font-weight:bold;">-</button>
-                    <span style="font-weight:bold;">${i.qty}</span>
-                    <button onclick="increaseQty(${i.id})" style="background:var(--dark-blue); color:white; border:none; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:bold;">+</button>
+                    <span style="font-weight:bold; min-width:20px; text-align:center;">${i.qty}</span>
+                    <button onclick="increaseQty(${i.id})" style="background:#ff00cc; color:white; border:none; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:bold;">+</button>
                 </div>
             </div>`;
         }).join('');
@@ -250,6 +308,8 @@ tel: +998-77-577-2042</p></footer>
         }).then(() => {
             alert("Buyurtma yuborildi!");
             window.cart = []; window.updateCart(); window.toggleCart();
+        }).catch(() => {
+            alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
         });
     };
 
@@ -258,7 +318,21 @@ tel: +998-77-577-2042</p></footer>
         window.renderMenu(window.products.filter(p => p.name.toLowerCase().includes(q)));
     };
 
-    window.toggleMode = () => document.body.classList.toggle('light');
+    // Sahifa yuklanganda saqlangan rejimni tekshirish
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light');
+    }
+
+    window.toggleMode = () => {
+        document.body.classList.toggle('light');
+        // Tanlovni saqlash
+        if (document.body.classList.contains('light')) {
+            localStorage.setItem('theme', 'light');
+        } else {
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
     window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
     
     window.handleAdmin = () => {
@@ -281,9 +355,15 @@ tel: +998-77-577-2042</p></footer>
             document.getElementById('p-name').value = '';
             document.getElementById('p-price').value = '';
             document.getElementById('p-img').value = '';
-        });
+        }); else {
+            alert("Iltimos barcha maydonlarni to'ldiring.");
+        }
     };
-    window.removeProduct = (fKey) => remove(ref(db, 'products/' + fKey));
+    window.removeProduct = (fKey) => {
+        if(confirm("Ushbu mahsulotni o'chirmoqchimisiz?")) {
+            remove(ref(db, 'products/' + fKey));
+        }
+    }
     window.closeAdmin = () => { window.isAdmin = false; document.getElementById('admin-box').style.display = 'none'; window.renderMenu(); };
 
     window.updateCart();
