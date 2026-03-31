@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
     <style>
         :root {
-            /* Dark Mode - To'q Ko'k Stil */
             --bg: #0a0a0a;
             --navbar-bg: rgba(10, 10, 10, 0.9);
             --text: #ffffff;
@@ -19,7 +18,7 @@
         }
 
         .light {
-            --bg: ##dfdbd7;
+            --bg: #ffffff;
             --navbar-bg: rgba(255, 255, 255, 0.95);
             --text: #1a1a1a;
             --accent: #00008B;
@@ -59,16 +58,26 @@
         header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); color: white; }
         header p { font-size: 1.1rem; opacity: 0.7; margin-top: 10px; }
 
-        /* MENU GRID */
+        /* MENU GRID - DOIMIY RAZMER UCHUN TUZATILDI */
         .menu { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 30px; padding: 20px 5%; max-width: 1400px; margin: 0 auto; 
+            display: grid; 
+            /* Har bir ustun kamida 280px, ko'pi bilan 1 qism joy oladi */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 30px; 
+            padding: 20px 5%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
         }
 
         .item { 
             background: #111111; border: 1px solid var(--border); 
             border-radius: 25px; padding: 20px; text-align: center; 
             transition: 0.4s; display: flex; flex-direction: column; position: relative;
+            /* Kartochka juda katta bo'lib ketmasligi uchun max-width */
+            max-width: 350px; 
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
         }
         .light .item { background: #f9f9f9; }
         .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 40px rgba(0, 0, 139, 0.3); }
@@ -120,6 +129,7 @@
             .logo { font-size: 1.2rem; }
             .search-input { display: none; }
             header h1 { font-size: 2.5rem; }
+            .menu { grid-template-columns: 1fr; justify-items: center; }
         }
     </style>
 </head>
@@ -188,7 +198,7 @@
     const productsRef = ref(db, 'products');
 
     window.products = [];
-    window.cart = JSON.parse(localStorage.getItem('burger_cart_blue_v2')) || [];
+    window.cart = JSON.parse(localStorage.getItem('burger_cart_blue_final')) || [];
     window.isAdmin = false;
     let clicks = 0;
 
@@ -238,7 +248,7 @@
     };
 
     window.updateCart = function() {
-        localStorage.setItem('burger_cart_blue_v2', JSON.stringify(window.cart));
+        localStorage.setItem('burger_cart_blue_final', JSON.stringify(window.cart));
         document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
         let total = 0;
         document.getElementById('cart-list').innerHTML = window.cart.map(i => {
