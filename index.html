@@ -6,7 +6,6 @@
     <title>SHOKH BURGER | Premium</title>
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
     <style>
-        /* --- ASOSIY O'ZGARUVCHILAR --- */
         :root {
             /* Dark Mode (Asosiy va rasmda ko'rsatilgan) */
             --bg: #171717;
@@ -15,27 +14,20 @@
             --accent: #ff00cc; /* Neon Pushti */
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
-            
-            /* Sarlavha effekti */
-            --header-text-shadow: 0 0 25px var(--accent);
-            --header-color: #fff;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         /* --- YANGILANGAN VA CHIROYLI LIGHT MODE --- */
         .light {
-            --bg: #f8f9fa; /* Juda yumshoq kulrang fon */
+            --bg: #ffffff; /* Toza oq fon */
             --navbar-bg: rgba(255, 255, 255, 0.9); /* Toza oq navbar */
             --text: #212529; /* To'q kulrang matn (o'qishga qulay) */
-            --accent: #ff00cc; /* Pushti saqlanadi, lekin matnlarda ishlatilmaydi */
+            --accent: #d600a9; /* Yorug' fonda ko'rinishi uchun bir oz to'qroq pushti */
             --glass: rgba(0, 0, 0, 0.03); /* Juda och so'ya */
             --border: rgba(0, 0, 0, 0.08); /* Och chegaralar */
-            
-            /* Light Mode uchun sarlavha: To'q va soyasiz (professional ko'rinish) */
-            --header-text-shadow: none;
-            --header-color: #1a1a1a;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Yumshoqroq soya */
         }
 
-        /* --- STILIZATSIYA --- */
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* NAVBAR */
@@ -45,9 +37,8 @@
             padding: 10px 5%; background: var(--navbar-bg); backdrop-filter: blur(15px); 
             border-bottom: 1px solid var(--border); z-index: 2000; box-sizing: border-box; flex-wrap: wrap;
         }
-        .logo { font-weight: 900; font-size: 1.5rem; color: #ff00cc; letter-spacing: 2px; text-decoration: none; }
-        /* Light modeda logotip rangini bir oz to'qroq pushti qilish mumkin */
-        .light .logo { color: #d600a9; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: #ff00cc; letter-spacing: 2px; text-decoration: none; transition: 0.3s; }
+        .light .logo { color: #d600a9; } /* Light modeda logo rangi */
         
         .nav-tools { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         
@@ -79,7 +70,9 @@
 
         /* HEADER SECTION */
         header { text-align: center; padding: 150px 20px 40px; display: flex; flex-direction: column; align-items: center; }
-        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; color: var(--header-color); text-shadow: var(--header-text-shadow); }
+        header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; color: #fff; text-shadow: 0 0 25px #ff00cc; }
+        /* Light mode uchun sarlavha: To'q va soyasiz (professional ko'rinish) */
+        .light header h1 { text-shadow: none; color: #1a1a1a; }
         header p { font-size: 1.1rem; opacity: 0.8; margin-top: 10px; max-width: 600px; }
 
         /* MENU GRID */
@@ -97,15 +90,11 @@
         }
         .item:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(255, 0, 204, 0.15); }
         .item img { width: 100%; height: 180px; border-radius: 20px; object-fit: cover; background: #111; }
-        .item h3 { margin: 15px 0 5px; font-size: 1.3rem; white-space: normal; color: var(--text); }
-        
-        /* Dark modeda maxsus oq rang taom nomi uchun */
-        body:not(.light) .item h3 { color: #fff; }
+        .item h3 { margin: 15px 0 5px; font-size: 1.3rem; white-space: normal; color: #fff; }
+        .light .item h3 { color: #212529; } /* Light modeda taom nomi */
 
-        .price { color: var(--accent); font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
-        
-        /* Light modeda narx rangini to'qroq pushti qilish */
-        .light .price { color: #d600a9; }
+        .price { color: #ff00cc; font-weight: 800; font-size: 1.3rem; margin: 10px 0; }
+        .light .price { color: #d600a9; } /* Light modeda narx rangi */
 
         .button { background: linear-gradient(45deg, var(--accent), #3333ff); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .button:hover { opacity: 0.9; transform: scale(1.03); }
@@ -122,14 +111,13 @@
             box-shadow: -10px 0 30px rgba(0,0,0,0.3); overflow-y: auto; box-sizing: border-box;
         }
         .cart-panel.active { right: 0; }
+        .light .cart-panel { border-left-color: #d600a9; }
         
         .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 
         /* ADMIN BOX */
-        #admin-box { position: fixed; top: 100px; right: 20px; width: 260px; background: var(--bg); border: 2px solid var(--accent); border-radius: 25px; padding: 20px; z-index: 5000; display: none; box-shadow: 0 0 30px rgba(255, 0, 204, 0.2); }
-        
-        /* Light modeda admin box soyasini o'chirish */
-        .light #admin-box { box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-color: #d600a9; }
+        #admin-box { position: fixed; top: 100px; right: 20px; width: 260px; background: var(--bg); border: 2px solid #ff00cc; border-radius: 25px; padding: 20px; z-index: 5000; display: none; box-shadow: 0 0 30px rgba(255, 0, 204, 0.2); }
+        .light #admin-box { border-color: #d600a9; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .light #admin-box h3 { color: #d600a9 !important; }
 
         /* FOOTER */
@@ -318,14 +306,12 @@ tel: +998-77-577-2042</p></footer>
         window.renderMenu(window.products.filter(p => p.name.toLowerCase().includes(q)));
     };
 
-    // Sahifa yuklanganda saqlangan rejimni tekshirish
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light');
     }
 
     window.toggleMode = () => {
         document.body.classList.toggle('light');
-        // Tanlovni saqlash
         if (document.body.classList.contains('light')) {
             localStorage.setItem('theme', 'light');
         } else {
