@@ -28,7 +28,7 @@
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* NAVBAR */
+        /* NAVBAR - Mobil uchun balandroq qilindi */
         .navbar { 
             position: fixed; top: 0; width: 100%; min-height: 70px; 
             display: flex; align-items: center; justify-content: space-between; 
@@ -57,10 +57,9 @@
         header h1 { font-size: clamp(2.5rem, 10vw, 4rem); margin: 0; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 20px var(--accent-glow); color: white; }
         header p { font-size: 1.1rem; opacity: 0.7; margin-top: 10px; }
 
-        /* MENU GRID - DOIMIY RAZMER UCHUN TUZATILDI */
+        /* MENU GRID */
         .menu { 
             display: grid; 
-            /* Har bir ustun kamida 280px, ko'pi bilan 1 qism joy oladi */
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
             gap: 30px; 
             padding: 20px 5%; 
@@ -72,7 +71,6 @@
             background: #111111; border: 1px solid var(--border); 
             border-radius: 25px; padding: 20px; text-align: center; 
             transition: 0.4s; display: flex; flex-direction: column; position: relative;
-            /* Kartochka juda katta bo'lib ketmasligi uchun max-width */
             max-width: 350px; 
             margin: 0 auto;
             width: 100%;
@@ -122,55 +120,32 @@
 
         footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 100px; }
         .f-text { opacity: 0.4; cursor: pointer; font-size: 12px; line-height: 1.8; color: var(--text); }
-/* Mobil qurilmalar uchun maxsus sozlamalar */
-@media (max-width: 600px) {
-    /* Navbar balandligini oshirish */
-    .navbar { 
-        padding: 15px 4%; 
-        min-height: 85px; 
-    }
-    
-    .logo { 
-        font-size: 1.4rem; /* Logoni kattaroq qilish */
-    }
 
-    .nav-tools {
-        gap: 12px;
-    }
+        /* TELEFONLAR UCHUN MAXSUS SOZLAMALAR */
+        @media (max-width: 600px) {
+            .navbar { 
+                padding: 15px 4%; 
+                min-height: 85px; /* Navbar kattalashtirildi */
+            }
+            .logo { font-size: 1.3rem; }
+            .search-input { display: none; } /* Mobil qidiruv yashirildi */
+            
+            .nav-tools { gap: 12px; }
+            .nav-tools button, .nav-tools div { font-size: 24px !important; }
 
-    /* Savat va rejim tugmachalarini kattalashtirish */
-    .nav-tools button, .nav-tools div {
-        font-size: 24px !important;
-    }
+            header { padding: 180px 20px 40px; } /* Header pastga tushirildi */
+            header h1 { font-size: 2.5rem; }
 
-    /* Header qismini pastga surish (navbar kattalashgani uchun) */
-    header { 
-        padding: 180px 20px 40px; 
-    }
-
-    header h1 { 
-        font-size: 2.8rem; 
-    }
-
-    /* Taomlarni 1 ta ustunda chiqarish */
-    .menu { 
-        grid-template-columns: 1fr; 
-        justify-items: center;
-        gap: 20px;
-        padding: 10px 5%;
-    }
-
-    /* Har bir taom kartochkasi ekran bo'ylab kengroq bo'lishi uchun */
-    .item {
-        max-width: 100%;
-        width: 90%; 
-    }
-    
-    /* Qidiruv inputini mobil versiyada butunlay yo'qotmaslik uchun (ixtiyoriy) */
-    .search-input { 
-        display: none; 
-    }
-}
+            .menu { 
+                grid-template-columns: 1fr; /* Taomlar 1 ta ustun bo'lib chiqadi */
+                justify-items: center; 
+                padding: 10px 5%;
+            }
+            .item {
+                max-width: 100%;
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -180,9 +155,9 @@
     <div class="nav-tools">
         <input type="text" id="searchInput" class="search-input" placeholder="Qidirish..." oninput="filterItems()">
         <a href="aloqa.html" class="nav-link">📞 Aloqa</a>
-        <button onclick="toggleMode()" style="background:none; border:none; cursor:pointer; font-size:20px;">🌓</button>
-        <div onclick="toggleCart()" style="cursor:pointer; font-size:22px; position:relative;">
-            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:var(--accent); color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:bold;">0</span>
+        <button onclick="toggleMode()" style="background:none; border:none; cursor:pointer; font-size:22px;">🌓</button>
+        <div onclick="toggleCart()" style="cursor:pointer; font-size:24px; position:relative;">
+            🛒 <span id="cart-badge" style="position:absolute; top:-10px; right:-10px; background:var(--accent); color:white; font-size:11px; padding:2px 7px; border-radius:50%; font-weight:bold;">0</span>
         </div>
     </div>
 </nav>
@@ -215,7 +190,6 @@
     <p class="f-text" onclick="handleAdmin()">
         © QOPOQ SOMSA Premium. Barcha huquqlar himoyalangan. <br>
         Xorazm xalqiga 7 yildan beri xizmat qilayotgan "Qopoq Somsa" da sizni kutib qolamiz
-    
     </p>
 </footer>
 
@@ -314,7 +288,7 @@
         const manzil = prompt("Manzilni kiriting:");
         if (!tel || !manzil) return alert("Ma'lumotlar to'liq emas!");
 
-        let text = `🔵 YANGI BUYURTMA (TO'Q KO'K):\n📞 Tel: ${tel}\n📍 Manzil: ${manzil}\n\n`;
+        let text = `🔵 YANGI BUYURTMA:\n📞 Tel: ${tel}\n📍 Manzil: ${manzil}\n\n`;
         let jami = 0;
         window.cart.forEach(i => {
             text += `• ${i.name} (${i.qty} dona)\n`;
