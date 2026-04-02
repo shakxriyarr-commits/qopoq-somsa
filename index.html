@@ -122,14 +122,55 @@
 
         footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); margin-top: 100px; }
         .f-text { opacity: 0.4; cursor: pointer; font-size: 12px; line-height: 1.8; color: var(--text); }
+/* Mobil qurilmalar uchun maxsus sozlamalar */
+@media (max-width: 600px) {
+    /* Navbar balandligini oshirish */
+    .navbar { 
+        padding: 15px 4%; 
+        min-height: 85px; 
+    }
+    
+    .logo { 
+        font-size: 1.4rem; /* Logoni kattaroq qilish */
+    }
 
-        @media (max-width: 600px) {
-            .navbar { padding: 10px 3%; }
-            .logo { font-size: 1.2rem; }
-            .search-input { display: none; }
-            header h1 { font-size: 2.5rem; }
-            .menu { grid-template-columns: 1fr; justify-items: center; }
-        }
+    .nav-tools {
+        gap: 12px;
+    }
+
+    /* Savat va rejim tugmachalarini kattalashtirish */
+    .nav-tools button, .nav-tools div {
+        font-size: 24px !important;
+    }
+
+    /* Header qismini pastga surish (navbar kattalashgani uchun) */
+    header { 
+        padding: 180px 20px 40px; 
+    }
+
+    header h1 { 
+        font-size: 2.8rem; 
+    }
+
+    /* Taomlarni 1 ta ustunda chiqarish */
+    .menu { 
+        grid-template-columns: 1fr; 
+        justify-items: center;
+        gap: 20px;
+        padding: 10px 5%;
+    }
+
+    /* Har bir taom kartochkasi ekran bo'ylab kengroq bo'lishi uchun */
+    .item {
+        max-width: 100%;
+        width: 90%; 
+    }
+    
+    /* Qidiruv inputini mobil versiyada butunlay yo'qotmaslik uchun (ixtiyoriy) */
+    .search-input { 
+        display: none; 
+    }
+}
     </style>
 </head>
 <body>
