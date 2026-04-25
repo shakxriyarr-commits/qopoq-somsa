@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QOPOQ SOMSA | Premium Dining</title>
-<link rel="icon" type="image/png" href="Clipped_image_20260425_093014.png?v=2">
+    <link rel="icon" type="image/png" href="./Clipped_image_20260425_093014.png">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -100,7 +100,7 @@
 
         /* CART PANEL */
         .cart-panel { 
-            position: fixed; top: 0; right: -100%; width: 100%; max-width: 450px; height: 100%; 
+            position: fixed; top: 0; right: -100%; width: 100px; max-width: 450px; height: 150px; 
             background: #0a0e14; border-left: 2px solid var(--accent); 
             z-index: 3000; padding: 40px; transition: 0.6s cubic-bezier(0.7, 0, 0.3, 1);
             box-shadow: -20px 0 60px rgba(0,0,0,0.9); box-sizing: border-box;
@@ -108,12 +108,37 @@
         .cart-panel.active { right: 0; }
 
         /* ADMIN BOX */
-        #admin-box { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 350px; background: #0d1117; border: 2px solid var(--accent); 
-            border-radius: 25px; padding: 35px; z-index: 5000; display: none;
-            box-shadow: 0 0 100px rgba(0,0,0,1);
-        }
+      #admin-box { 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 280px; /* Ixcham eni */
+    background: #0d1117; 
+    border: 1px solid var(--accent); 
+    border-radius: 20px; 
+    padding: 35px; 
+    z-index: 5000; 
+    display: none;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+}
+
+.admin-input {
+    width: 100%; 
+    padding: 10px; 
+    background: #161b22; 
+    color: #fff; 
+    border: 1px solid var(--border); 
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.admin-input:focus {
+    border-color: var(--accent);
+}
     /* --- PROFESSIONAL FOOTER STYLE --- */
     .premium-footer {
         background: #030508;
@@ -234,6 +259,7 @@
     <a href="index.html" class="logo">QOPOQ SOMSA</a>
     <div class="nav-tools">
         <input type="text" id="searchInput" class="search-input" placeholder="Qidirish..." oninput="filterItems()">
+        <a href="aloqa.html" class="nav-link">📞 Aloqa</a>
         <div onclick="toggleCart()" style="cursor:pointer; font-size:24px; position:relative;">
             🛒 <span id="cart-badge" style="position:absolute; top:-8px; right:-10px; background:var(--accent); color:#000; font-size:11px; width:20px; height:20px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-weight:bold;">0</span>
         </div>
@@ -259,22 +285,28 @@
 </div>
 
 <div id="admin-box">
-    <h3 style="text-align:center; color:var(--accent); font-family:'Playfair Display'; font-size:1.8rem;">Boshqaruv</h3>
-    <input type="text" id="p-name" style="width:100%; padding:12px; margin:10px 0; background:#161b22; color:#fff; border:1px solid var(--border); border-radius:8px;" placeholder="Taom nomi">
-    <input type="number" id="p-price" style="width:100%; padding:12px; margin:10px 0; background:#161b22; color:#fff; border:1px solid var(--border); border-radius:8px;" placeholder="Narxi">
-    <input type="text" id="p-img" style="width:100%; padding:12px; margin:10px 0; background:#161b22; color:#fff; border:1px solid var(--border); border-radius:8px;" placeholder="Rasm URL">
-    <button class="button" onclick="addProduct()">Tizimga qo'shish</button>
-    <button onclick="closeAdmin()" style="width:100%; background:none; border:none; color:grey; margin-top:15px; cursor:pointer;">Yopish</button>
+    <div id="admin-drag-header" style="cursor: move; padding: 10px; background: rgba(197, 160, 89, 0.1); border-radius: 15px 15px 0 0; margin: -35px -35px 20px -35px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: var(--accent); font-family: 'Playfair Display'; font-weight: bold; margin-left: 15px;">Boshqaruv</span>
+        <i class="fas fa-arrows-alt" style="color: var(--accent); margin-right: 15px; font-size: 12px; opacity: 0.6;"></i>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="p-name" class="admin-input" placeholder="Taom nomi">
+        <input type="number" id="p-price" class="admin-input" placeholder="Narxi">
+        <input type="text" id="p-img" class="admin-input" placeholder="Rasm URL">
+        <button class="button" onclick="addProduct()" style="padding: 10px; font-size: 13px;">QO'SHISH</button>
+        <button onclick="closeAdmin()" style="background:none; border:none; color:rgba(255,255,255,0.4); cursor:pointer; font-size: 12px;">Yopish</button>
+    </div>
 </div>
 
 <footer class="premium-footer">
     <div class="footer-grid">
         <div class="footer-section">
-            <h3>SHAKH Premium</h3>
+            <h3>QOPOQ SOMSA Premium</h3>
             <p style="opacity: 0.7; line-height: 1.8;">Xorazmning lazzatli an'analarini zamonaviy Luxury uslubda taqdim etamiz. Bizning har bir taomimiz san'at asaridir.</p>
             <div class="social-icons">
-                <a href="https://t.me/shaxriiyar" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a href="https://instagram.com/shakxriyarr" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://t.me/shakxriyarr" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="tel:+998775772042"><i class="fas fa-phone-alt"></i></a>
             </div>
         </div>
@@ -307,7 +339,7 @@
     </div>
 
     <div class="copyright" onclick="handleAdmin()">
-        © 2026 SHAKH Premium. Barcha huquqlar himoyalangan. <br>
+        © 2026 QOPOQ SOMSA Premium. Barcha huquqlar himoyalangan. <br>
         7 yillik tajribaga ega "Qopoq Somsa" maskani.
     </div>
 </footer>
@@ -530,6 +562,45 @@ onValue(productsRef, (snapshot) => {
     }
     window.renderMenu();
 });
+// Admin panelni surish funksiyasi
+const adminBox = document.getElementById("admin-box");
+const dragHeader = document.getElementById("admin-drag-header");
+
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
+
+dragHeader.addEventListener("mousedown", dragStart);
+document.addEventListener("mousemove", drag);
+document.addEventListener("mouseup", dragEnd);
+
+function dragStart(e) {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+    if (e.target === dragHeader || dragHeader.contains(e.target)) {
+        isDragging = true;
+    }
+}
+
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        // Transformni markazdan siljitish uchun translate qo'shamiz
+        adminBox.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
+    }
+}
+
+function dragEnd() {
+    isDragging = false;
+}
 </script>
 </body>
 </html>
