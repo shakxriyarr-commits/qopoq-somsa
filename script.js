@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// Firebase konfiguratsiyasi
+// 1. Firebase konfiguratsiyasi
 const firebaseConfig = {
     apiKey: "AIzaSyCZdqBBYEoIXAqln8a9c801AT3G_I_ys4U",
     authDomain: "shsh-120cf.firebaseapp.com",
@@ -13,10 +13,15 @@ const firebaseConfig = {
     measurementId: "G-NDYE872XCD"
 };
 
-// Initialize Firebase
+// 2. Initializatsiya
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
+
+// Telegram Bot ma'lumotlari
+const BOT_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; 
+const ADMIN_ID = "8030496668"; 
+const KURYER_ID = "7312694067"; 
 
 // Global o'zgaruvchilar
 window.products = [];
@@ -24,26 +29,22 @@ window.cart = JSON.parse(localStorage.getItem('burger_cart_blue_final')) || [];
 window.isAdmin = false;
 let clicks = 0;
 
-// 1. MAXFIY ADMIN PANELNI OCHISH (FOOTERGA 3 MARTA BOSISH)
+// 3. Admin Panelga kirish (Footerga 3 marta bosish)[cite: 2, 3]
 window.handleAdmin = () => {
     clicks++;
     if (clicks === 3) {
         const password = prompt("Admin parolini kiriting:");
-        if (password === "7777") { // Parol: 7777
+        if (password === "7777") {
             window.isAdmin = true;
             document.getElementById('admin-box').style.display = 'block';
-            window.renderMenu(); // O'chirish tugmalari ko'rinishi uchun qayta chizamiz
-            alert("Admin rejimi faollashdi!");
-        } else {
-            alert("Xato parol!");
+            window.renderMenu();
         }
         clicks = 0;
     }
-    // Agar 2 soniya ichida 3 marta bosilmasa, sanashni boshidan boshlaydi
     setTimeout(() => { clicks = 0; }, 2000);
 };
 
-// 2. FIREBASE'DAN TAOMLARNI REAL-TIME OLISH
+// 4. Firebase'dan mahsulotlarni real-vaqtda olish[cite: 3]
 onValue(productsRef, (snapshot) => {
     const data = snapshot.val();
     window.products = [];
@@ -51,152 +52,49 @@ onValue(productsRef, (snapshot) => {
         Object.keys(data).forEach(key => {
             window.products.push({ fKey: key, ...data[key] });
         });
-        localStorage.setItem('cached_menu', JSON.stringify(window.products));
     }
     window.renderMenu();
 });
 
-// 3. MENYUNI EKRANGA CHIQARISH
+// 5. Menyuni chizish
 window.renderMenu = function(data = window.products) {
     const menu = document.getElementById('menuList');
     if (!menu) return;
-
     menu.innerHTML = data.map((p, index) => `
-        <div class="item reveal" style="transition-delay: ${index * 100}ms">
-            ${window.isAdmin ? `<button class="admin-del" style="position:absolute; top:15px; right:15px; background:#ff4b2b; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-            <img src="${p.img}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200'">
+        <div class="item reveal">
+            ${window.isAdmin ? `<button class="admin-del" style="position:absolute; top:10px; right:10px; background:red; color:white; border-radius:50%; border:none; width:30px; height:30px; cursor:pointer;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
+            <img src="${p.img}" loading="lazy">
             <h3>${p.name}</h3>
             <div class="price">${p.price.toLocaleString()} so'm</div>
             <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
         </div>
     `).join('');
-    
-    setTimeout(handleReveal, 100);
 };
 
-// 4. YANGI TAOM QO'SHISH (FIREBASE'GA)
-window.addProduct = () => {
-    const name = document.getElementById('p-name').value;
-    const price = parseInt(document.getElementById('p-price').value);
-    const img = document.getElementById('p-img').value;
-
-    if (name && price && img) {
-        const newProduct = {
-            id: Date.now(),
-            name: name,
-            price: price,
-            img: img
-        };
-
-        push(productsRef, newProduct).then(() => {
-            alert("Taom muvaffaqiyatli qo'shildi!");
-            // Inputlarni tozalash
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-img').value = '';
-        }).catch((error) => {
-            alert("Xatolik: " + error.message);
-        });
-    } else {
-        alert("Iltimos, barcha maydonlarni to'ldiring!");
-    }
+// 6. Savatga qo'shish va yangilash
+window.addToCart = function(id) {
+    const p = window.products.find(x => x.id === id);
+    const item = window.cart.find(x => x.id === id);
+    if(item) item.qty++; else window.cart.push({...p, qty: 1});
+    window.updateCart();
 };
 
-// 5. TAOMNI O'CHIRISH
-window.removeProduct = (fKey) => {
-    if (confirm("Ushbu taomni menyudan o'chirishni xohlaysizmi?")) {
-        const itemRef = ref(db, 'products/' + fKey);
-        remove(itemRef).then(() => {
-            alert("Taom o'chirildi!");
-        });
-    }
+window.updateCart = function() {
+    localStorage.setItem('burger_cart_blue_final', JSON.stringify(window.cart));
+    document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
+    let total = 0;
+    document.getElementById('cart-list').innerHTML = window.cart.map(i => {
+        total += i.price * i.qty;
+        return `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span>${i.name} (${i.qty})</span>
+            <span>${(i.price * i.qty).toLocaleString()} so'm</span>
+        </div>`;
+    }).join('');
+    document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
 };
 
-// 6. ADMIN BOXNI YOPISH
-window.closeAdmin = () => {
-    window.isAdmin = false;
-    document.getElementById('admin-box').style.display = 'none';
-    window.renderMenu();
-};
-
-// --- Qolgan funksiyalar (Savat, Reveal va h.k.) ---
-function handleReveal() {
-    const reveals = document.querySelectorAll(".reveal");
-    reveals.forEach((el) => {
-        const windowHeight = window.innerHeight;
-        const elementTop = el.getBoundingClientRect().top;
-        if (elementTop < windowHeight - 50) {
-            el.classList.add("active");
-        }
-    });
-}
-
-window.addEventListener("scroll", handleReveal);
-window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
-    // Eski CHAT_ID bitta edi, endi biz massiv (list) ko'rinishida qilamiz
-const BOT_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; // O'z joyida qoladi
-const ADMIN_ID = "8030496668"; // Bu sizning ID ingiz (Admin)
-const KURYER_ID = "7312694067"; // Kuryerning Telegram ID raqamini yozing; 
-
-    onValue(productsRef, (snapshot) => {
-        const data = snapshot.val();
-        window.products = []; 
-        if (data) {
-            Object.keys(data).forEach(key => {
-                window.products.push({ fKey: key, ...data[key] });
-            });
-        }
-        window.renderMenu();
-    });
-
-    window.renderMenu = function(data = window.products) {
-        const menu = document.getElementById('menuList');
-        menu.innerHTML = data.map(p => `
-            <div class="item">
-                ${window.isAdmin ? `<button style="position:absolute; top:15px; right:15px; background:#ff4b2b; color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer; z-index:100; font-weight:bold;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-                <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500'">
-                <h3>${p.name}</h3>
-                <div class="price">${p.price.toLocaleString()} so'm</div>
-                <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
-            </div>
-        `).join('');
-    };
-
-    window.addToCart = function(id) {
-        const p = window.products.find(x => x.id === id);
-        const item = window.cart.find(x => x.id === id);
-        if(item) item.qty++; else window.cart.push({...p, qty: 1});
-        window.updateCart();
-    };
-
-    window.updateQty = function(id, delta) {
-        const item = window.cart.find(x => x.id === id);
-        if(item) {
-            item.qty += delta;
-            if(item.qty <= 0) window.cart = window.cart.filter(x => x.id !== id);
-            window.updateCart();
-        }
-    };
-
-    window.updateCart = function() {
-        localStorage.setItem('burger_cart_blue_final', JSON.stringify(window.cart));
-        document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
-        let total = 0;
-        document.getElementById('cart-list').innerHTML = window.cart.map(i => {
-            total += i.price * i.qty;
-            return `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <div><b>${i.name}</b><br><small>${i.price.toLocaleString()} so'm</small></div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <button onclick="updateQty(${i.id}, -1)" style="background:var(--accent); border:none; width:25px; height:25px; border-radius:5px; cursor:pointer;">-</button>
-                    <span>${i.qty}</span>
-                    <button onclick="updateQty(${i.id}, 1)" style="background:var(--accent); border:none; width:25px; height:25px; border-radius:5px; cursor:pointer;">+</button>
-                </div>
-            </div>`;
-        }).join('');
-        document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
-    };
-
-    window.checkout = function() {
+// 7. BUYURTMA BERISH (Telegram + Firebase)[cite: 3]
+window.checkout = function() {
     if (window.cart.length === 0) return alert("Savat bo'sh!");
     const tel = prompt("Telefon raqamingiz:");
     const manzil = prompt("Manzilni kiriting:");
@@ -210,10 +108,8 @@ const KURYER_ID = "7312694067"; // Kuryerning Telegram ID raqamini yozing;
     });
     text += `\n💰 JAMI: ${jami.toLocaleString()} so'm`;
 
-    // Ikkala ID ga yuborish uchun ID larni ro'yxatga olamiz
+    // Telegramga yuborish[cite: 3]
     const ids = [ADMIN_ID, KURYER_ID];
-
-    // Har bir ID ga xabar yuborish
     ids.forEach(id => {
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
@@ -222,177 +118,40 @@ const KURYER_ID = "7312694067"; // Kuryerning Telegram ID raqamini yozing;
         });
     });
 
-    alert("Buyurtma qabul qilindi! Admin va Kuryerga xabar yuborildi.");
-    window.cart = []; 
-    window.updateCart(); 
+    // Firebase'ga buyurtmani saqlash
+    const ordersRef = ref(db, 'orders');
+    push(ordersRef, {
+        phone: tel,
+        address: manzil,
+        items: window.cart,
+        total: jami,
+        date: new Date().toISOString()
+    });
+
+    alert("Buyurtma qabul qilindi! Botga xabar yuborildi.");
+    window.cart = [];
+    window.updateCart();
     window.toggleCart();
 };
-    window.filterItems = () => {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        window.renderMenu(window.products.filter(p => p.name.toLowerCase().includes(q)));
-    };
 
-    window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
-
-    window.handleAdmin = () => {
-        clicks++;
-        if(clicks === 3) {
-            if(prompt("Admin paroli:") === "7777") {
-                window.isAdmin = true;
-                document.getElementById('admin-box').style.display = 'block';
-                window.renderMenu();
-            }
-            clicks = 0;
-        }
-        setTimeout(() => clicks = 0, 2000);
-    };
-
-    window.addProduct = () => {
-        const n = document.getElementById('p-name').value, p = parseInt(document.getElementById('p-price').value), i = document.getElementById('p-img').value;
-        if(n && p && i) {
-            set(push(productsRef), { id: Date.now(), name: n, price: p, img: i }).then(() => {
-                alert("Taom menyuga qo'shildi!");
-                document.getElementById('p-name').value = '';
-                document.getElementById('p-price').value = '';
-                document.getElementById('p-img').value = '';
-            });
-        }
-    };
-
-    window.removeProduct = (fKey) => { if(confirm("O'chirilsinmi?")) remove(ref(db, 'products/' + fKey)); };
-    window.closeAdmin = () => { window.isAdmin = false; document.getElementById('admin-box').style.display = 'none'; window.renderMenu(); };
-
-    window.updateCart();
-    // Firebase onValue funksiyasidan oldin buni qo'shing
-const cachedProducts = JSON.parse(localStorage.getItem('cached_menu'));
-if (cachedProducts) {
-    window.products = cachedProducts;
-  window.renderMenu = function(data = window.products) {
-    const menu = document.getElementById('menuList');
-    menu.innerHTML = data.map(p => `
-        <div class="item">
-            ${window.isAdmin ? `<button class="admin-del" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-            <img src="${p.img}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200'">
-            <h3>${p.name}</h3>
-            <div class="price">${p.price.toLocaleString()} so'm</div>
-            <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
-        </div>
-    `).join('');
-};
-}
-
-// Firebase onValue ichini esa bunday o'zgartiring:
-onValue(productsRef, (snapshot) => {
-    const data = snapshot.val();
-    window.products = [];
-    if (data) {
-        Object.keys(data).forEach(key => {
-            window.products.push({ fKey: key, ...data[key] });
-        });
-        // Ma'lumot kelganidan keyin keshni yangilaymiz
-        localStorage.setItem('cached_menu', JSON.stringify(window.products));
-    }
-    window.renderMenu();
-});
-// Admin panelni surish funksiyasi
-const adminBox = document.getElementById("admin-box");
-const dragHeader = document.getElementById("admin-drag-header");
-
-let isDragging = false;
-let currentX;
-let currentY;
-let initialX;
-let initialY;
-let xOffset = 0;
-let yOffset = 0;
-
-dragHeader.addEventListener("mousedown", dragStart);
-document.addEventListener("mousemove", drag);
-document.addEventListener("mouseup", dragEnd);
-
-function dragStart(e) {
-    initialX = e.clientX - xOffset;
-    initialY = e.clientY - yOffset;
-    if (e.target === dragHeader || dragHeader.contains(e.target)) {
-        isDragging = true;
-    }
-}
-
-function drag(e) {
-    if (isDragging) {
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        xOffset = currentX;
-        yOffset = currentY;
-        // Transformni markazdan siljitish uchun translate qo'shamiz
-        adminBox.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
-    }
-}
-
-function dragEnd() {
-    isDragging = false;
-}
-    // Formadan Telegramga habar yuborish funksiyasi
-    function sendContactMsg() {
-        const name = document.getElementById('msg-name').value;
-        const phone = document.getElementById('msg-phone').value;
-        const message = document.getElementById('msg-text').value;
-
-        if(!name || !phone || !message) {
-            alert("Iltimos, barcha maydonlarni to'ldiring!");
-            return;
-        }
-
-        // Script ichidagi mavjud BOT_TOKEN va CHAT_ID dan foydalanadi
-        const BOT_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; 
-        const CHAT_ID = "8030496668"; 
-
-        const text = `📬 YANGI HABAR (Aloqa):\n\n👤 Ism: ${name}\n📞 Tel: ${phone}\n💬 Habar: ${message}`;
-
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: CHAT_ID, text: text })
-        }).then(() => {
-            alert("Habaringiz muvaffaqiyatli yuborildi!");
-            document.getElementById('msg-name').value = '';
-            document.getElementById('msg-phone').value = '';
-            document.getElementById('msg-text').value = '';
-        }).catch(() => {
-            alert("Xatolik yuz berdi. Keyinroq qayta urinib ko'ring.");
+// 8. Admin Panel: Taom qo'shish va o'chirish[cite: 3]
+window.addProduct = () => {
+    const n = document.getElementById('p-name').value;
+    const p = parseInt(document.getElementById('p-price').value);
+    const i = document.getElementById('p-img').value;
+    if(n && p && i) {
+        push(productsRef, { id: Date.now(), name: n, price: p, img: i }).then(() => {
+            alert("Taom qo'shildi!");
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-img').value = '';
         });
     }
-
-    window.renderMenu = function(data = window.products) {
-    const menu = document.getElementById('menuList');
-    menu.innerHTML = data.map((p, index) => `
-        <div class="item reveal" style="transition-delay: ${index * 100}ms">
-            ${window.isAdmin ? `<button class="admin-del" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-            <img src="${p.img}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=200'">
-            <h3>${p.name}</h3>
-            <div class="price">${p.price.toLocaleString()} so'm</div>
-            <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
-        </div>
-    `).join('');
-    
-    // Kartochkalar chizilgandan so'ng ularni faollashtirish
-    setTimeout(handleReveal, 100);
 };
-function handleReveal() {
-    const reveals = document.querySelectorAll(".reveal");
-    
-    reveals.forEach((el) => {
-        const windowHeight = window.innerHeight;
-        const elementTop = el.getBoundingClientRect().top;
-        const elementVisible = 100;
-        
-        if (elementTop < windowHeight - elementVisible) {
-            el.classList.add("active");
-        }
-    });
-}
 
-// Sahifa yuklanganda va skrol qilinganda tekshirish
-window.addEventListener("scroll", handleReveal);
-window.addEventListener("load", handleReveal);
+window.removeProduct = (fKey) => { 
+    if(confirm("O'chirilsinmi?")) remove(ref(db, 'products/' + fKey)); 
+};
+
+window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
+window.updateCart();
