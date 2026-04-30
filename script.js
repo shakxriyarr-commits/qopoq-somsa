@@ -18,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 
-// Telegram Bot ma'lumotlari
+// Telegram ma'lumotlari
 const BOT_TOKEN = "8740580495:AAGLyL1oeM-Pu96tFzwvb5Y63uJaPWmGgEI"; 
 const ADMIN_ID = "8030496668"; 
 const KURYER_ID = "7312694067"; 
@@ -29,7 +29,7 @@ window.cart = JSON.parse(localStorage.getItem('burger_cart_blue_final')) || [];
 window.isAdmin = false;
 let clicks = 0;
 
-// 3. Admin Panelga kirish (Footerga 3 marta bosish)[cite: 2, 3]
+// 3. Maxfiy Admin Panel (3 marta bosish)
 window.handleAdmin = () => {
     clicks++;
     if (clicks === 3) {
@@ -38,13 +38,14 @@ window.handleAdmin = () => {
             window.isAdmin = true;
             document.getElementById('admin-box').style.display = 'block';
             window.renderMenu();
+            alert("Admin rejimi faol!");
         }
         clicks = 0;
     }
     setTimeout(() => { clicks = 0; }, 2000);
 };
 
-// 4. Firebase'dan mahsulotlarni real-vaqtda olish[cite: 3]
+// 4. Firebase'dan real-vaqtda olish (Xatolik tuzatildi)[cite: 3]
 onValue(productsRef, (snapshot) => {
     const data = snapshot.val();
     window.products = [];
@@ -53,27 +54,34 @@ onValue(productsRef, (snapshot) => {
             window.products.push({ fKey: key, ...data[key] });
         });
     }
-    window.renderMenu();
+    window.renderMenu(); // Ma'lumot kelishi bilan chizamiz
 });
 
-// 5. Menyuni chizish
+// 5. Menyuni chizish funksiyasi (Tuzatilgan variant)[cite: 2, 3]
 window.renderMenu = function(data = window.products) {
     const menu = document.getElementById('menuList');
     if (!menu) return;
+
+    if (data.length === 0) {
+        menu.innerHTML = `<p style="color:var(--accent); text-align:center; width:100%;">Menyuda taomlar mavjud emas.</p>`;
+        return;
+    }
+
     menu.innerHTML = data.map((p, index) => `
-        <div class="item reveal">
-            ${window.isAdmin ? `<button class="admin-del" style="position:absolute; top:10px; right:10px; background:red; color:white; border-radius:50%; border:none; width:30px; height:30px; cursor:pointer;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
-            <img src="${p.img}" loading="lazy">
+        <div class="item reveal active" style="transition-delay: ${index * 50}ms">
+            ${window.isAdmin ? `<button class="admin-del" style="position:absolute; top:10px; right:10px; background:#ff4b2b; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:100;" onclick="removeProduct('${p.fKey}')">&times;</button>` : ''}
+            <img src="${p.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=Rasm+Topilmadi'">
             <h3>${p.name}</h3>
-            <div class="price">${p.price.toLocaleString()} so'm</div>
+            <div class="price">${Number(p.price).toLocaleString()} so'm</div>
             <button class="button" onclick="addToCart(${p.id})">Savatga qo'shish</button>
         </div>
     `).join('');
 };
 
-// 6. Savatga qo'shish va yangilash
+// 6. Savat va Buyurtma funksiyalari[cite: 3]
 window.addToCart = function(id) {
     const p = window.products.find(x => x.id === id);
+    if (!p) return;
     const item = window.cart.find(x => x.id === id);
     if(item) item.qty++; else window.cart.push({...p, qty: 1});
     window.updateCart();
@@ -81,19 +89,24 @@ window.addToCart = function(id) {
 
 window.updateCart = function() {
     localStorage.setItem('burger_cart_blue_final', JSON.stringify(window.cart));
-    document.getElementById('cart-badge').innerText = window.cart.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById('cart-badge');
+    if(badge) badge.innerText = window.cart.reduce((s, i) => s + i.qty, 0);
+    
     let total = 0;
-    document.getElementById('cart-list').innerHTML = window.cart.map(i => {
-        total += i.price * i.qty;
-        return `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <span>${i.name} (${i.qty})</span>
-            <span>${(i.price * i.qty).toLocaleString()} so'm</span>
-        </div>`;
-    }).join('');
-    document.getElementById('total-price').innerText = total.toLocaleString() + " so'm";
+    const cartList = document.getElementById('cart-list');
+    if(cartList) {
+        cartList.innerHTML = window.cart.map(i => {
+            total += i.price * i.qty;
+            return `<div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:5px;">
+                <span>${i.name} (x${i.qty})</span>
+                <span style="color:var(--accent)">${(i.price * i.qty).toLocaleString()} so'm</span>
+            </div>`;
+        }).join('');
+    }
+    const totalEl = document.getElementById('total-price');
+    if(totalEl) totalEl.innerText = total.toLocaleString() + " so'm";
 };
 
-// 7. BUYURTMA BERISH (Telegram + Firebase)[cite: 3]
 window.checkout = function() {
     if (window.cart.length === 0) return alert("Savat bo'sh!");
     const tel = prompt("Telefon raqamingiz:");
@@ -108,7 +121,6 @@ window.checkout = function() {
     });
     text += `\n💰 JAMI: ${jami.toLocaleString()} so'm`;
 
-    // Telegramga yuborish[cite: 3]
     const ids = [ADMIN_ID, KURYER_ID];
     ids.forEach(id => {
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -118,34 +130,32 @@ window.checkout = function() {
         });
     });
 
-    // Firebase'ga buyurtmani saqlash
-    const ordersRef = ref(db, 'orders');
-    push(ordersRef, {
-        phone: tel,
-        address: manzil,
-        items: window.cart,
-        total: jami,
-        date: new Date().toISOString()
-    });
-
-    alert("Buyurtma qabul qilindi! Botga xabar yuborildi.");
+    alert("Buyurtma qabul qilindi! Admin va Kuryerga xabar yuborildi.");
     window.cart = [];
     window.updateCart();
     window.toggleCart();
 };
 
-// 8. Admin Panel: Taom qo'shish va o'chirish[cite: 3]
+// 7. Admin: Mahsulot qo'shish (Xatolik tuzatildi)[cite: 3]
 window.addProduct = () => {
-    const n = document.getElementById('p-name').value;
-    const p = parseInt(document.getElementById('p-price').value);
-    const i = document.getElementById('p-img').value;
-    if(n && p && i) {
-        push(productsRef, { id: Date.now(), name: n, price: p, img: i }).then(() => {
+    const nameEl = document.getElementById('p-name');
+    const priceEl = document.getElementById('p-price');
+    const imgEl = document.getElementById('p-img');
+
+    if (nameEl.value && priceEl.value && imgEl.value) {
+        const newProd = {
+            id: Date.now(),
+            name: nameEl.value,
+            price: parseInt(priceEl.value),
+            img: imgEl.value
+        };
+
+        push(productsRef, newProd).then(() => {
             alert("Taom qo'shildi!");
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-img').value = '';
+            nameEl.value = ''; priceEl.value = ''; imgEl.value = '';
         });
+    } else {
+        alert("Barcha maydonlarni to'ldiring!");
     }
 };
 
@@ -154,4 +164,10 @@ window.removeProduct = (fKey) => {
 };
 
 window.toggleCart = () => document.getElementById('cartPanel').classList.toggle('active');
+window.closeAdmin = () => {
+    window.isAdmin = false;
+    document.getElementById('admin-box').style.display = 'none';
+    window.renderMenu();
+};
+
 window.updateCart();
