@@ -201,3 +201,52 @@ window.updateCart = function() {
     const totalEl = document.getElementById('total-price');
     if(totalEl) totalEl.innerText = total.toLocaleString() + " so'm";
 };
+
+window.updateCart = function() {
+    localStorage.setItem('burger_cart_blue_final', JSON.stringify(window.cart));
+    
+    const badge = document.getElementById('cart-badge');
+    if(badge) badge.innerText = window.cart.reduce((s, i) => s + i.qty, 0);
+    
+    let total = 0;
+    const cartList = document.getElementById('cart-list');
+    
+    if(cartList) {
+        if(window.cart.length === 0) {
+            cartList.innerHTML = `<p style="color:#666; text-align:center; margin-top:20px;">Savat bo'sh</p>`;
+        } else {
+            cartList.innerHTML = window.cart.map(i => {
+                total += i.price * i.qty;
+                return `
+                    <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #333;">
+                        <div style="display:flex; flex-direction:column; max-width: 50%;">
+                            <span style="font-weight:bold; color:white;">${i.name}</span>
+                            <span style="color:#d4af37; font-weight:bold;">${(i.price * i.qty).toLocaleString()} so'm</span>
+                        </div>
+                        
+                        <div style="display:flex; align-items:center; gap:10px; background:#1a222d; padding:5px 10px; border-radius:8px;">
+                            <button onclick="changeQty(${i.id}, -1)" style="background:none; border:none; color:#d4af37; font-size:1.2rem; cursor:pointer; font-weight:bold;">-</button>
+                            <span style="color:white; min-width:20px; text-align:center;">${i.qty}</span>
+                            <button onclick="changeQty(${i.id}, 1)" style="background:none; border:none; color:#d4af37; font-size:1.2rem; cursor:pointer; font-weight:bold;">+</button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+    }
+    
+    const totalEl = document.getElementById('total-price');
+    if(totalEl) totalEl.innerText = total.toLocaleString() + " so'm";
+};
+
+// Mahsulot sonini o'zgartirish funksiyasi
+window.changeQty = function(id, delta) {
+    const item = window.cart.find(x => x.id === id);
+    if (item) {
+        item.qty += delta;
+        // Agar soni 0 bo'lib qolsa, savatdan o'chiramiz
+        if (item.qty <= 0) {
+            window.cart = window.cart.filter(x => x.id !== id);
+        }
+        window.updateCart();
+    }
+};
